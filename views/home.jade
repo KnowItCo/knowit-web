@@ -13,10 +13,12 @@ block content
 
 						div.question_list
 							each question in user.questions
-								div.question_item
-									p Q: #{question.question}
-										br
-										| A: #{question.answer}
+								div.question_item(id=question._id)
+									| Q: #{question.question}
+									br
+									| A: #{question.answer}
+									br
+									button(onclick='deleteQuestion(this)') Delete!
 
 						div.profile_menu
 							a(href='/signout', class='text-center') Sign Out

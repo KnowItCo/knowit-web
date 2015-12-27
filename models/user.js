@@ -21,4 +21,9 @@ UserSchema.statics.addQuestion = function (user, question, answer, cb) {
 	user.save(cb);
 }
 
+UserSchema.statics.deleteQuestion = function (user, id, cb) {
+	user.questions.pull({_id: id});
+	user.save(cb);
+}
+
 module.exports = mongoose.model('User', UserSchema);

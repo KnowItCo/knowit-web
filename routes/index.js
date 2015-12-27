@@ -68,11 +68,18 @@ module.exports = function(passport) {
 		res.render('create', { user: req.user });
 	});
 
-	/* post submission */
+	/* create question */
 	router.post('/create', isAuthenticated, function(req,res,next) {
 		User.addQuestion(req.user, req.body.question, req.body.answer, function(err) {
 			res.redirect('/');
 		});
+	});
+
+	/* delete question */
+	router.delete('/create', isAuthenticated, function(req,res,next) {
+		User.deleteQuestion(req.user, req.body.id, function(err) {
+			res.json({message: "removed!"});
+		})
 	});
 
 	return router;
