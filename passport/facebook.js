@@ -1,5 +1,5 @@
 var FacebookStrategy = require('passport-facebook').Strategy;
-var User = require('../models/user');
+var User = require('../models/user.js');
 var config = require('../_config.js');
 
 module.exports = function(passport) {
@@ -13,8 +13,6 @@ module.exports = function(passport) {
 
     // facebook will send back the tokens and profile
     function(access_token, refresh_token, profile, done) {
-
-    	console.log('profile', profile);
 
 		// asynchronous
 		process.nextTick(function() {

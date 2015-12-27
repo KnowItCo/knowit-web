@@ -9,6 +9,14 @@ block content
 						div.signup-wall
 							ul.user-details
 								li 
-									a(href='/create', class='text-center') Create Question 
+									a(href='/create', class='text-center') Create Question
+
+						div.question_list
+							each question in user.questions
+								div.question_item
+									p Q: #{question.question}
+										br
+										| A: #{question.answer}
+
 						div.profile_menu
 							a(href='/signout', class='text-center') Sign Out

@@ -1,0 +1,21 @@
+extends layout
+
+block content
+	div.container
+		div.row
+			div.col-sm-6.col-md-4.col-md-offset-4
+				#create
+					h1.text-center.page-title Create Question
+
+						div.create_question
+							form(name="login", action="/create", method="post")
+								input(type="text", placeholder="Question...", name="question")
+								input(type="text", placeholder="Answer...", name="answer")
+								br
+								input(type="submit", value="Create!")
+
+
+						div.profile_menu
+							a(href='/', class='text-center') Home
+							br
+							a(href='/signout', class='text-center') Sign Out

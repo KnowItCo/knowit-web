@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var User = require('../models/user');
 
 var isAuthenticated = function (req, res, next) {
 	// if user is authenticated in the session, call the next() to call the next request handler 
@@ -11,8 +12,7 @@ var isAuthenticated = function (req, res, next) {
 	res.redirect('/signin');
 }
 
-module.exports = function(passport){
-
+module.exports = function(passport) {
 	/* GET login page. */
 	router.get('/signin', function(req, res) {
     	// Display the Login page with any flash message, if any
@@ -40,7 +40,6 @@ module.exports = function(passport){
 
 	/* GET Home Page */
 	router.get('/', isAuthenticated, function(req, res){
-		console.log('yo',req.user);
 		res.render('home', { user: req.user });
 	});
 
@@ -63,6 +62,18 @@ module.exports = function(passport){
 			failureRedirect : '/signin'
 		})
 	);
+
+	/* create question form */
+	router.get('/create', isAuthenticated, function(req,res,next) {
+		res.render('create', { user: req.user });
+	});
+
+	/* post submission */
+	router.post('/create', isAuthenticated, function(req,res,next) {
+		User.addQuestion(req.user, req.body.question, req.body.answer, function(err) {
+			res.redirect('/');
+		});
+	});
 
 	return router;
 }
