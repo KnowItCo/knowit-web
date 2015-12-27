@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
+var qg = require("../modules/questiongenerator.js");
 
 var isAuthenticated = function (req, res, next) {
 	// if user is authenticated in the session, call the next() to call the next request handler 
@@ -62,6 +63,13 @@ module.exports = function(passport) {
 			failureRedirect : '/signin'
 		})
 	);
+
+	/* question generator api */
+	router.post('/generate', isAuthenticated, function(req, res, next) {
+		qg.generateQuestion(req.body.text, function(data) {
+			res.send(data);
+		});
+	});
 
 	/* create question form */
 	router.get('/create', isAuthenticated, function(req,res,next) {

@@ -7,10 +7,13 @@ var bodyParser = require('body-parser');
 
 var config = require('./_config');
 
-
-var mongoose = require('mongoose');
 // Connect to DB
+var mongoose = require('mongoose');
 mongoose.connect(config.mongo.url);
+
+// set up question geneator
+var questiongenerator = require('./modules/questiongenerator.js');
+//questiongenerator.connect(config.questiongenerator.url);
 
 var app = express();
 
