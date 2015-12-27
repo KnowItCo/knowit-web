@@ -1,19 +1,28 @@
 var QuestionGenerator = {};
+var request = require('request');
 
 /*
  * Set up connection
  */
-QuestionGenerator.connect = function (url) {
-	this.url = url;
+QuestionGenerator.connect = function (config) {
+	this.protocol = config.protocol;
+	this.host = config.host;
+	this.port = config.port;
+	this.path = config.path;
 };
 
 /*
  * Return JSON object w/ questions generated from text
  */
 QuestionGenerator.generateQuestion = function (text, cb) {
-	cb({"status":"no text supplied!"});
-	//TODO: add http req to qg and pass cb to it
+	var url = this.protocol + this.host + ":" + this.port + this.path;
+	request.post({url: url, form: {text: text}}, function (err, httpResponse, body) { 
+		if(err) {
+			cb({'status': err});
+		} else {
+			cb(body);
+		}
+	});
 };
 
 module.exports = QuestionGenerator;
-

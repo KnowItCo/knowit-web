@@ -13,7 +13,7 @@ mongoose.connect(config.mongo.url);
 
 // set up question geneator
 var questiongenerator = require('./modules/questiongenerator.js');
-//questiongenerator.connect(config.questiongenerator.url);
+questiongenerator.connect(config.questiongenerator);
 
 var app = express();
 

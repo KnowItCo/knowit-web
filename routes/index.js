@@ -65,11 +65,23 @@ module.exports = function(passport) {
 	);
 
 	/* question generator api */
-	router.post('/generate', isAuthenticated, function(req, res, next) {
+	router.post('/api/generate', isAuthenticated, function(req, res, next) {
 		qg.generateQuestion(req.body.text, function(data) {
 			res.send(data);
 		});
 	});
+
+	/* generate question form */
+	router.get('/generate', isAuthenticated, function(req, res, next) {
+		res.render('generate', { user: req.user });
+	});
+
+	/* generate question */
+	router.post('/generate', isAuthenticated, function(req, res, next) {
+		User.addQuestion(req.user, req.body.question, req.body.answer, function(err) {
+			res.json({message: 'added!'});
+		});
+	})
 
 	/* create question form */
 	router.get('/create', isAuthenticated, function(req,res,next) {

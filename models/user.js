@@ -21,6 +21,12 @@ UserSchema.statics.addQuestion = function (user, question, answer, cb) {
 	user.save(cb);
 }
 
+UserSchema.statics.addQuestions = function (user, questions, cb) {
+	// questions should be array; [{question, answer}]
+	user.questions.push(questions);
+	user.save(cb);
+}
+
 UserSchema.statics.deleteQuestion = function (user, id, cb) {
 	user.questions.pull({_id: id});
 	user.save(cb);

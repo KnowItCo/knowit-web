@@ -1,0 +1,21 @@
+extends layout
+
+block content
+	div.container
+		div.row
+			div.col-sm-6.col-md-4.col-md-offset-4
+				#create
+					h1.text-center.page-title Generate Question
+
+						div.create_question
+							input(id='text_to_generate_question_from', type="text", placeholder="Enter text...", name="text")
+							br
+							button(onclick='generateQuestions("text_to_generate_question_from")') Generate!
+
+						div.question_list(id='generated_question_list')
+							
+
+						div.profile_menu
+							a(href='/', class='text-center') Home
+							br
+							a(href='/signout', class='text-center') Sign Out
