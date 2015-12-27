@@ -1,4 +1,10 @@
-You need:
+#TODO:
+
+1. Clean up project structure
+2. Web quiz (just for demonstration)
+3. SMS integration
+
+#Install
 
 - mongodb running locally (knowit-web db namespace should be clear or at least don't care about it)
 - _config.js file in root of project with appropriate configs (fb app keys etc.)
