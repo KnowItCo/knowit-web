@@ -15,8 +15,8 @@ QuestionGenerator.connect = function (config) {
  * Return JSON object w/ questions generated from text
  */
 QuestionGenerator.generateQuestion = function (text, cb) {
-	var url = this.protocol + this.host + ":" + this.port + this.path;
-	request.post({url: url, form: {text: text}}, function (err, httpResponse, body) { 
+	var url = this.protocol + this.host + ":" + this.port + this.path + "?text="+encodeURI(text);
+	request.get({url: url}, function (err, httpResponse, body) { 
 		if(err) {
 			cb({'status': err});
 		} else {

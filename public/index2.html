@@ -1,0 +1,522 @@
+<html>
+
+<head>
+	<script   src="https://code.jquery.com/jquery-1.12.1.min.js"   integrity="sha256-I1nTg78tSrZev3kjvfdM5A5Ak/blglGzlaZANLPDl3I="   crossorigin="anonymous"></script>
+	<script type="text/javascript" src="autosize-master/dist/autosize.js"></script>
+	<script type="text/javascript" src="underscore.js"></script>
+	<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">
+</head>
+
+<body>
+
+	<style>
+
+	body {
+		background-color: #E9EAED;
+		margin-top: 20px;
+		font-family: Helvetica;
+	}
+
+	.table.questions {
+		font-family: Helvetica;
+		font-size: 14px;
+	}
+
+	.table > tbody > tr > td {
+		vertical-align: middle;
+	}
+
+	.container {
+		width: 700px;
+		background-color: #FFF;
+		border: 1px;
+		border-style: solid;
+		border-color: #DDD;
+		padding: 0px;
+	}
+
+	.head {
+		width: 700px;
+		background-color: #E9EAED;
+		border: none;
+	}
+
+	.item_container {
+		padding: 10px;
+		margin-top: 5px;
+	}
+
+	.item {
+		width: 680px;
+		padding: 10px;
+		background-color: #FFF;
+		border: 1px;
+		border-color: #DDD;
+		border-style: solid;
+		margin: 5px 0px 5px 0px;
+	}
+
+	.input_box {
+		resize: none;
+		width: 100%;
+		border: none;
+		font-size: 14px;
+		padding: 10px;
+	}
+
+	.input_box:focus {
+		outline: none;
+	}
+
+	.hr {
+		width: 100%;
+		height: 1px;
+		background-color: #DDD;
+	}
+
+	.buttons {
+		width: 100%;
+		overflow: hidden;
+	}
+
+	.b_knowit {
+		margin: 7px;
+		padding: 5px 10px 5px 10px;
+		float: right;
+		font-weight: 600;
+		color: #FFFFFF;
+		background-color: #46639E;
+		border: 0;
+	}
+
+	.b_knowit:focus {
+		outline: none;
+	}
+
+	.b_5ws {
+		background-color: #FFF;
+		border: 0;
+		opacity: 0.5;
+		font-weight: 600;
+		height: 44px;
+		width: 44px;
+	}
+
+	.b_5ws:hover {
+		opacity: 0.8;
+		background-color: #F5F5F5;
+	}
+
+	.b_5ws:focus {
+		outline: none;
+	}
+	.b_addquestion {
+		background-color: #FFF;
+		border: 0;
+		opacity: 0.5;
+		font-weight: 600;
+		height: 44px;
+		width: 44px;
+	}
+
+	.b_addquestion:hover {
+		opacity: 0.8;
+		background-color: #F5F5F5;
+	}
+
+	.b_addquestion:focus {
+		outline: none;
+	}
+
+	.questions_container {
+		display: none;
+	}
+
+	.questions {
+		border: 0;
+		width: 100%;
+		margin-bottom: 0px;
+	}
+
+	.questions tr:hover {
+		background-color: #EEE;
+	}
+
+	.questions td:focus {
+		outline: none;
+	}
+
+	.answer {
+		display: none;
+	}
+
+	.item input {
+		width: 100%;
+		font-size: 14px;
+		border: 0;
+	}
+
+	.item input:focus {
+		outline: 0;
+	}
+
+	[class*='close-'] {
+		color: #777;
+		font: 14px/100% arial, sans-serif;
+		text-decoration: none;
+		text-shadow: 0 1px 0 #fff;
+		opacity: 0.5;
+		display: block;
+		float: right;
+	}
+
+	.close-thik:after {
+		content: '✖'; /* UTF-8 symbol */
+	}
+
+	.close-thik:hover {
+		opacity: 0.8;
+	}
+
+	.question_tools button {
+		height:100%;
+	}
+
+	.middle_col {
+		width:100%;
+	}
+
+	.interactive_question {
+		font-family: inherit;
+	}
+
+	.interactive_question h1 {
+		font-size: 14px;
+		margin: 0px 0px 5px 0px;
+		display: inline-block;
+	}
+
+	.interactive_question input {
+		width: 100%;
+		border: none;
+	}
+
+	.interactive_question input:focus {
+		outline: none;
+	}
+
+	.interactive_question_container {
+		margin-top: 5px;
+	}
+
+	.help {
+		float: right;
+		opacity: 0.5;
+		font-size: 12px;
+	}
+
+	.help:hover {
+		opacity: 0.8;
+		cursor: default;
+	}
+
+	#interactivequestions {
+		background-color: #E9EAED;
+		border: none;
+	}
+
+	.original {
+		opacity: 0.5;
+		margin-bottom: 5px;
+	}
+
+	</style>
+
+	<div class="container head">
+		<h1>Knowit!</h1>
+		<p>Type or paste anything you'd like to remember and KnowIt will help you remember it!</p>
+	</div>
+
+	<div class="container">
+		<textarea class="input_box" placeholder="What do you want to know? eg. In 2016, Donald Trump ran for president of the United States."></textarea>
+		<div class="hr" id="mainhr"></div>
+		<div class="questions_container">
+			<table class="table questions" cellspacing="0" cellpadding="" data-toggle="tooltip" title="Will these Q&amp;As help you remember? You can edit them!">
+				<!-- i just remembered when websites were made  
+						w/ tables & images that were sliced in photoshop YA BISH -->
+				<!-- <tr><td>1,1</td><td>1,2</td></tr> -->
+			</table>
+			<div class="hr"></div>
+			<div class="hr"></div>
+		</div>
+		<div class="buttons">
+			<input class="b_knowit" type="button" value="Know It!">
+			<div class="question_tools">
+				<input class="b_addquestion" type="button" value="+" data-toggle="tooltip" title="Add a new question">
+				<input class="b_5ws" type="button" value="5Ws" data-toggle="tooltip" title="Add the 5Ws">
+			</div>
+			
+		</div>
+	</div>
+
+	<div id="interactivequestions" class="container"></div>
+
+</body>
+
+<script>
+
+// To teach - you must surprise!
+// Unique memory. Leave something unique. Shock the system. Something it hasn't seen before. Make it laugh. Make it - memorable. There is a reason we say things are <i>memorable</i>. Why am I typing this here?...
+
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+    $('.question_tools').hide();
+});
+
+// the only cool thing about this
+autosize($('.input_box'));
+
+// WET DIAMONDS IN MA MOUTH
+var items = [];
+
+var redrawItems = function () {
+	// please forgives us father
+	_.each(items, function(item){
+		var vitem = $('<div class="item"><div>'+item.question+''+item.answer+'</div></div>');
+		$('.item_container').append(vitem);
+		vitem.fadeIn('slow');
+	});
+}
+
+var generate = function (e) {
+	if($('.input_box').val() != '') {
+		var questionTable = $('.questions').empty();
+		var questions_container = $('.questions_container');
+		questions_container.hide();
+
+		// get some data 
+		var questions = [];
+		// add some dummy data cuz im a dummy
+		/*questions.push({'question':'Who is Obama?', 'answer': 'President'});
+		questions.push({'question':'Who is Obama?', 'answer': 'President'});
+		questions.push({'question':'Who is Obama?', 'answer': 'President'});*/
+
+		var data = {'text': $('.input_box').val() };
+
+		$.post('generate', data, function(result) {
+			result = JSON.parse(result);
+				if (result.length > 0) {
+				_.each(result, function(i) {
+					// THE PAIN THE PAIN THE PAIN
+					var thisentryineedreferencetoffs = $("<tr class=\"qitem\"><td contenteditable=\"true\">"+i.question+"</td><td contenteditable=\"true\" class=\"middlecol\">"+i.answer+"</td><td><span data-toggle=\"tooltip\" data-placement=\"right\" title=\"Remove Question\" class=\"close-thik\"></span></td></tr>");
+
+					// i should be shot for this shit
+					thisentryineedreferencetoffs.children().children().click(function(e) {
+
+						$(this).parent().parent().remove();
+						if( $('.qitem').length == 0 ) {
+							$('[data-toggle="tooltip"]').mouseout();
+							$('.questions_container').children('.hr').hide();
+							$('.questions_container').children('.hr').hide();
+							$('.input_box').val('');
+							$('.question_tools').hide();
+						}
+
+						// the last of the mohicans
+						// great fucking movie
+						// daniel day lewis 
+						// watched that movie so many times as a kid -- epic.
+						// -- anyway, disable the tooltips all around b/c otherwise
+						// they stay and i'm lazy so just do it here.
+						//$('[data-toggle="tooltip"]').mouseout();
+
+						//$('.questions_container').children('.hr').hide();
+
+						//$(this).parent().parent().remove();
+						
+					});
+
+
+					questionTable.append(thisentryineedreferencetoffs);
+					$('.close-thik').tooltip();
+
+					$('.question_tools').fadeIn('slow');
+					questions_container.fadeIn('slow');
+					questions_container.children('.hr').fadeIn('slow');
+					//questions_container.children('.hr').fadeIn('slow');
+				});
+			}
+		});
+	}
+}
+
+$('.input_box').bind('input propertychange', function() {
+	// lazy af
+	//if($(this).val() == '') {
+		var questionTable = $('.questions').empty();
+		var questions_container = $('.questions_container');
+		questions_container.hide();
+		$('.question_tools').hide();
+	//}
+});
+
+//setup before functions
+var typingTimer;                //timer identifier
+var doneTypingInterval = 250;  //time in ms, 5 second for example
+
+//on keyup, start the countdown
+$('.input_box').keyup(function(){
+    clearTimeout(typingTimer);
+    if ($(this).val) {
+        typingTimer = setTimeout(doneTyping, doneTypingInterval);
+    }
+});
+
+//user is "finished typing," do something
+function doneTyping (e) {
+    generate(e);
+}
+
+$('.b_knowit').click(function (e) {
+
+	if($('.input_box').val() != '') {
+		//redrawItems(); //redraw items b/c we still code like it's 1999 ya bish
+
+		// should put some checks on content here, like character limits and all that kinda stuff... do that later
+
+		toadd = $('.qitem');
+
+		_.each(toadd, function (q) {
+			i = {}
+			i.question = $($(q).children()[0]).text();
+			i.answer = $($(q).children()[1]).text();
+			i.original = $('.input_box').val();
+			addInteractiveQuestion(i);
+		});
+
+		// clear the junk in the trunk
+		var questionTable = $('.questions').empty();
+		var questions_container = $('.questions_container');
+		questions_container.hide();
+		$('.input_box').val(''); // tears
+	}
+});
+
+var addInteractiveQuestion = function (i) {
+	// i should have original data, question & answer
+	var qc = $('<div class="container item_container"></div>');
+	qc.data("i", i);
+
+	var iq = $('<div class="interactive_question"></div>');
+
+	var help = $('<div class="help" data-toggle="tooltip" title="Show original text">?</div>');
+	help.tooltip();
+	help.data("active", false);
+	help.click(function(e) {
+		if (!$(this).data("active")) {
+			var o = $('<div class="original"><div class="hr" style="margin: 3px 0px 3px 0px"></div>').prepend($(this).parent().parent().data("i").original);		
+			$(this).parent().prepend(o);
+			$(this).data("active", true);
+		} else {
+			$(this).data("active", false);
+			$(this).parent().children('.original').remove();
+		}
+	})
+
+	iq.append(help);
+
+	var q = $('<h1>'+i.question+'</h1>');
+	var a = $('<input type="text" placeholder="type answer here...">');
+	a.data('answer',i.answer);
+
+	a.keydown(function (e){
+   		if(e.keyCode == 13){
+        	if($(this).val() == $(this).data('answer')) {
+        		$($(this).parent().parent().parent().children()[1]).children().children('input').focus();
+        		$(this).parent().parent().remove();
+        	}
+        	else {
+        		$(this).val('');
+        		$(this).attr('placeholder', i.answer);
+        	}
+    	}
+	});
+
+	iq.append(q);
+	iq.append(a);
+
+	qc.append(iq);
+	$('#interactivequestions').append(qc);
+}
+
+var addQuestion = function (i) {
+
+	var questionTable = $('.questions');
+
+	if (i.question == null) i.question = '';
+	if (i.answer == null) i.answer = '';
+
+		// THE PAIN THE PAIN THE PAIN
+	var thisentryineedreferencetoffs = $("<tr class=\"qitem\"><td contenteditable=\"true\">"+i.question+"</td><td contenteditable=\"true\" class=\"middlecol\">"+i.answer+"</td><td><span data-toggle=\"tooltip\" data-placement=\"right\" title=\"Remove Question\" class=\"close-thik\"></span></td></tr>");
+
+	// i should be shot for this shit
+	thisentryineedreferencetoffs.children().children().click(function(e) {
+
+		$(this).parent().parent().remove();
+		if( $('.qitem').length == 0 ) {
+			$('[data-toggle="tooltip"]').mouseout();
+			$('.questions_container').children('.hr').hide();
+			$('.questions_container').children('.hr').hide();
+			$('.input_box').val('');
+			$('.question_tools').hide();
+		}
+
+		// the last of the mohicans
+		// great fucking movie
+		// daniel day lewis 
+		// watched that movie so many times as a kid -- epic.
+		// -- anyway, disable the tooltips all around b/c otherwise
+		// they stay and i'm lazy so just do it here.
+		//$('[data-toggle="tooltip"]').mouseout();
+
+		//$('.questions_container').children('.hr').hide();
+
+		//$(this).parent().parent().remove();
+		
+	});
+
+	questionTable.append(thisentryineedreferencetoffs);
+	thisentryineedreferencetoffs.children().children('.close-thik').tooltip();
+}
+
+$('.b_addquestion').click(function (e) {
+	addQuestion(e);
+});
+
+// this seems to me like a really good idea to include
+// anything you can do to help the user here
+// prod them to do SOMETHING with their lives
+$('.b_5ws').click(function (e) {
+	questions =  ["Who?", "What?", "Where?", "When?", "Why?"];
+	_.each(questions, function(i) {
+		var q = {};
+		q.question = i;
+		addQuestion(q);
+	})
+});
+
+// this some bullshit from s/o that doesn't work
+// i'm too lazy to figure out why the selector
+// isn't working & i think i'm gonna do something
+// else with these tool tips entirely anyway
+// so fuck it.
+$("[rel='popover']").mouseover(function () {
+    $("[rel='popover']").not(this).popover('hide');
+});
+
+
+</script>
+
+</html>
