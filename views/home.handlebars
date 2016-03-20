@@ -367,7 +367,10 @@ $(document).ready(function(){
 			getAndFillQuestions();
 		}
 	});
+
+	{{#if user}}
 	updateSettingsView();
+	{{/if}}
 });
 
 // the only cool thing about this
