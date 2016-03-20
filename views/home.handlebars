@@ -340,7 +340,17 @@ var getAndFillQuestions = function () {
     });
 }
 
-var updateSettingsView = function () {
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+    $('.question_tools').hide();
+
+	$.get('api/ping', function(data){
+		if(data.auth) {
+			getAndFillQuestions();
+		}
+	});
+
+	{{#if user}}
 	var $select = $("#buffer");
 	$select.empty();
     for (i=1;i<=20;i++){
@@ -356,20 +366,6 @@ var updateSettingsView = function () {
     		$(child).attr('selected','selected');
     	}
     });
-}
-
-$(document).ready(function(){
-    $('[data-toggle="tooltip"]').tooltip();
-    $('.question_tools').hide();
-
-	$.get('api/ping', function(data){
-		if(data.auth) {
-			getAndFillQuestions();
-		}
-	});
-
-	{{#if user}}
-	updateSettingsView();
 	{{/if}}
 });
 
