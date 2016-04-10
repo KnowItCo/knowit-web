@@ -117,6 +117,22 @@
 		outline: none;
 	}
 
+	.b_fillinblank {
+		background-color: #FFF;
+		border: 0;
+		opacity: 0.5;
+		font-weight: 600;
+		height: 44px;
+		width: 44px;
+	}
+
+	.b_fillinblank:hover {
+		opacity: 0.8;
+		background-color: #F5F5F5;
+	}
+
+	.b_fillinblank:focus { outline: none; }
+
 	.questions_container {
 		display: none;
 	}
@@ -128,7 +144,7 @@
 	}
 
 	.questions tr:hover {
-		background-color: #EEE;
+		//background-color: #EEE;
 	}
 
 	.questions td:focus {
@@ -242,6 +258,19 @@
 		height: 30px;
 	}
 
+	.blank:hover {
+		text-decoration: underline;
+		color: #DDD;
+	}
+
+	.blank2 {
+		text-decoration: underline;
+		text-decoration-color: #000;
+		-moz-text-decoration-color: #000;
+		-webkit-text-decoration-color: #000;
+		color: #FFF;
+	}
+
 	</style>
 
 	<div class="container head">
@@ -277,6 +306,7 @@
 			<div class="question_tools">
 				<input class="b_addquestion" type="button" value="+" data-toggle="tooltip" title="Add a new question">
 				<input class="b_5ws" type="button" value="5Ws" data-toggle="tooltip" title="Add the 5Ws">
+				<input class="b_fillinblank" type="button" value="__" data-toggle="tooltip" title="Add fill in the blank question">
 			</div>
 			
 		</div>
@@ -473,6 +503,9 @@ function doneTyping (e) {
     generate(e);
 }
 
+
+
+
 $('.b_knowit').click(function (e) {
 
 	if($('.input_box').val() != '') {
@@ -628,6 +661,66 @@ var addQuestion = function (i) {
 
 $('.b_addquestion').click(function (e) {
 	addQuestion(e);
+});
+
+var createFillInBlank = function (text) {
+	var questionTable = $('.questions'); 
+
+
+	var a = text.split(" ");
+	for (var i = 0; i < a.length; i++) {
+		a[i] = '<span class="blank">' + a[i] + '</span>';
+	}
+	var t = a.join(" ");
+
+		// THE PAIN THE PAIN THE PAIN
+	var thisentryineedreferencetoffs = $("<tr class=\"qitem\"><td>"+t+"</td><td><span data-toggle=\"tooltip\" data-placement=\"right\" title=\"Remove Question\" class=\"close-thik\"></span></td></tr>");
+
+	thisentryineedreferencetoffs.children().children('.blank').click(function (e) {
+		console.log("yas");
+		var b = $(this);
+		if(b.hasClass('blank')) {
+			b.removeClass('blank');
+			b.addClass('blank2');
+		} else {
+			b.removeClass('blank2');
+			b.addClass('blank');
+		}
+	});
+
+	// i should be shot for this shit
+	thisentryineedreferencetoffs.children().children('.close-thik').click(function(e) {
+
+		$(this).parent().parent().remove();
+		if( $('.qitem').length == 0 ) {
+			$('[data-toggle="tooltip"]').mouseout();
+			$('.questions_container').children('.hr').hide();
+			$('.questions_container').children('.hr').hide();
+			$('.input_box').val('');
+			$('.question_tools').hide();
+		}
+
+		// the last of the mohicans
+		// great fucking movie
+		// daniel day lewis 
+		// watched that movie so many times as a kid -- epic.
+		// -- anyway, disable the tooltips all around b/c otherwise
+		// they stay and i'm lazy so just do it here.
+		//$('[data-toggle="tooltip"]').mouseout();
+
+		//$('.questions_container').children('.hr').hide();
+
+		//$(this).parent().parent().remove();
+		
+	});
+
+	questionTable.append(thisentryineedreferencetoffs);
+	thisentryineedreferencetoffs.children().children('.close-thik').tooltip();
+}
+
+$('.b_fillinblank').click(function (e) {
+	var text = $('.input_box').val();
+	createFillInBlank(text);
 });
 
 // this seems to me like a really good idea to include

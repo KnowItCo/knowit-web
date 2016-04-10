@@ -5,8 +5,12 @@
 	<script type="text/javascript" src="autosize-master/dist/autosize.js"></script>
 	<script type="text/javascript" src="underscore.js"></script>
 	<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+	<script type="text/javascript" src="js/backbone.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">
+
+	<script src="js/jquery.tagsinput.min.js"></script>
+<link rel="stylesheet" type="text/css" href="stylesheets/jquery.tagsinput.min.css" />
 </head>
 
 <body>
@@ -14,7 +18,7 @@
 	<style>
 
 	body {
-		background-color: #E9EAED;
+		background-color: #F1F1F1;
 		margin-top: 20px;
 		font-family: Helvetica;
 	}
@@ -39,7 +43,7 @@
 
 	.head {
 		width: 700px;
-		background-color: #E9EAED;
+		background-color: #F1F1F1;
 		border: none;
 	}
 
@@ -95,7 +99,7 @@
 		outline: none;
 	}
 
-	.b_5ws {
+	.b_qg {
 		background-color: #FFF;
 		border: 0;
 		opacity: 0.5;
@@ -104,14 +108,52 @@
 		width: 44px;
 	}
 
-	.b_5ws:hover {
+
+	.b_qg:hover {
 		opacity: 0.8;
 		background-color: #F5F5F5;
 	}
 
-	.b_5ws:focus {
+	.b_qg:focus {
 		outline: none;
 	}
+
+	.b_fb {
+		background-color: #FFF;
+		border: 0;
+		opacity: 0.5;
+		font-weight: 600;
+		height: 44px;
+		width: 44px;
+	}
+
+	.b_fb:hover {
+		opacity: 0.8;
+		background-color: #F5F5F5;
+	}
+
+	.b_fb:focus {
+		outline: none;
+	}
+
+	.b_mc {
+		background-color: #FFF;
+		border: 0;
+		opacity: 0.5;
+		font-weight: 600;
+		height: 44px;
+		width: 44px;
+	}
+
+	.b_mc:hover {
+		opacity: 0.8;
+		background-color: #F5F5F5;
+	}
+
+	.b_mc:focus {
+		outline: none;
+	}
+
 	.b_addquestion {
 		background-color: #FFF;
 		border: 0;
@@ -232,6 +274,47 @@
 		margin-bottom: 5px;
 	}
 
+	.tags_leftcol {
+		float: left;
+		clear: left;
+		width:50px;
+		padding: 3px 10px 3px 10px;
+		font-size:12px;
+	}
+
+	div.tagsinput {
+		border: none;
+	}
+
+	div.tagsinput span.tag {
+		background: #9ADBFD;
+		border: 1px solid #1D7FCB;
+		color: #0642AA;
+	}
+	div.tagsinput span.tag a {
+		color: #0642AA;
+	}
+
+	input + .tooltip > .tooltip-inner {
+      padding: 10px;
+  	}
+
+  	.question_holder_row {
+
+  	}
+
+  	.question_holder_row_content {
+  		margin: 10px;
+  	}
+
+  	.hova {
+  		cursor: default;
+  	}
+
+  	.hova:hover {
+  		opacity: 0.3;
+  	}
+
 	</style>
 
 	<div class="container head">
@@ -239,14 +322,20 @@
 		<p>Type or paste anything you'd like to remember and KnowIt will help you remember it!</p>
 	</div>
 
+
+	<div id="prompt" class="container"></div>
+
+	<!--
 	<div class="container">
 		<textarea class="input_box" placeholder="What do you want to know? eg. In 2016, Donald Trump ran for president of the United States."></textarea>
 		<div class="hr" id="mainhr"></div>
+		<div>here i am</div>
+		<div class="hr" id="mainhr"></div>
 		<div class="questions_container">
 			<table class="table questions" cellspacing="0" cellpadding="" data-toggle="tooltip" title="Will these Q&amp;As help you remember? You can edit them!">
-				<!-- i just remembered when websites were made  
-						w/ tables & images that were sliced in photoshop YA BISH -->
-				<!-- <tr><td>1,1</td><td>1,2</td></tr> -->
+				 i just remembered when websites were made  
+						w/ tables & images that were sliced in photoshop YA BISH 
+				 <tr><td>1,1</td><td>1,2</td></tr> -
 			</table>
 			<div class="hr"></div>
 			<div class="hr"></div>
@@ -255,28 +344,185 @@
 			<input class="b_knowit" type="button" value="Know It!">
 			<div class="question_tools">
 				<input class="b_addquestion" type="button" value="+" data-toggle="tooltip" title="Add a new question">
-				<input class="b_5ws" type="button" value="5Ws" data-toggle="tooltip" title="Add the 5Ws">
+				<input class="b_addquestion" type="button" value="5Ws" data-toggle="tooltip" title="Add the 5Ws">
 			</div>
 			
 		</div>
-	</div>
-
+	</div> -->
 	<div id="interactivequestions" class="container"></div>
 
 </body>
 
 <script>
 
+
+var Learnable = Backbone.Model.extend({
+	setPrompt: function(prompt) {
+		this.set({prompt: prompt});
+	},
+
+	/*
+		QG: 0
+		FB: 1
+		MC: 2
+	*/
+	setType: function(type) {
+		this.set({type: type});
+	},
+
+	setQuestion: function(question) {
+		this.set({question: question});
+	},
+
+	setAnswer: function(answer) {
+		this.set({answer: answer});
+	},
+
+	setId: function(id) {
+		this.set({id: id});
+	},
+
+	setTags: function(tags) {
+		this.set({tags: tags});
+	},
+
+	// dummy for now, always true
+	answer: function(answers) {
+		var test = this.get('answer');
+		switch(this.get('type')) {
+		    case 0: //QG
+		    	break;
+		    case 1: //MC
+		        break;
+		    default: //FB
+		        break;
+		    
+		}
+		return true;
+	}
+
+});
+
+
+var PromptView = Backbone.View.extend({
+	el: $('#prompt'),
+
+	events: {
+      "click .b_knowit": "knowit_button",
+      "click .b_fb": "fb_button",
+      "keyup textarea": "keyup"
+    },
+
+	initialize: function() {
+		_.bindAll(this, 'render', 'knowit_button','fb_button');
+		/* stuff for this view */
+		this.typingTimer;
+		this.doneTypingInterval = 350;
+		this.oldInput;
+
+		// this is better than before but still ugly af in general... turn this into a template etc.
+
+		textarea = $('<textarea class="input_box" placeholder="What do you want to know? eg. In 2016, Donald Trump ran for president of the United States."></textarea>');
+		divider = $('<div class="hr"></div>');
+
+		container = $('<div class="question_holder"></div>');
+
+		tags = $('<div class="tags"><input name="tags" id="tags" value="" /></div>');
+
+		divider2 = $('<div class="hr"></div>');
+		buttons = $('<div class="buttons"><input class="b_knowit" type="button" value="Know It!"><div class="question_tools"><input class="b_qg" type="button" value="QG" data-toggle="tooltip" title="Generate Questions"><input class="b_addquestion" type="button" value="+" data-toggle="tooltip" title="Add a new question"><input class="b_fb" type="button" value="__" data-toggle="tooltip" title="Fill in the blank"><input class="b_mc" type="button" value="&#9673;" data-toggle="tooltip" title="Multiple Choice"></div></div>');
+
+		buttons.children('.question_tools').children('input').tooltip({
+			viewport: '#prompt'
+		});
+
+		this.$el.append(textarea,divider,container,tags,divider2,buttons);
+		autosize(this.$el.children('textarea'));
+
+		$('#tags').tagsInput({
+			'width':'625px',
+			'height':'40px',
+			'defaultText':'add tag...'
+		})
+
+		this.render();
+	},
+
+	addRow: function (o) {
+		console.log(o);
+		console.log(this.$el.children('.question_holder'));
+
+		row = $('<div class="question_holder_row"><div class="question_holder_row_content">'+o+'</div><div class="hr"></div></div>');
+
+		this.$el.children('.question_holder').append(row);
+	},
+
+	fb_button: function (e) {
+		var t = this.$el.children('textarea').val();
+		if (t == '' || !t) return;
+
+		// wrap w/ spans
+		var text_arr = t.split(" ");
+		var text_arr_spans = [];
+		for (var i = 0 ; i < text_arr.length; i++) {
+			text_arr_spans.push('<span class="hova">'+text_arr[i]+'</span>')
+		}
+		t = text_arr_spans.join(" ");
+
+		this.addRow(t);
+
+		console.log(t);
+	},
+
+    knowit_button: function () {
+    	console.log("knowit");
+    	// save these questions
+
+    	/*var n = _.clone(this.model.get('things'));
+    	n.push('another thing!');
+    	this.model.set('things', n); */
+    },
+
+    keyup: function(e) {
+    	if($(e.currentTarget).val() != this.oldInput) {
+	    	clearTimeout(this.typingTimer);
+	    	this.oldInput = $(e.currentTarget).val();
+		    if ($(e.currentTarget).val() != "") {
+		    	//console.log($(e.currentTarget).val())
+		    	this.typingTimer = setTimeout(this.doneTyping, this.doneTypingInterval);
+		    }
+		}
+    },
+
+    doneTyping: function(e) {
+    	var data = {'text': $('.input_box').val() };
+    	//console.log(data);
+    	$.post('/api/generate', data, function(result) {
+			result = JSON.parse(result);
+			if (result.length > 0) {
+				_.each(result, function(q) {
+					//console.log(q);
+				});
+			}
+    	});
+    },
+
+	render: function() {
+	}
+
+});
+
+var prompt = new PromptView();
+
+
+
 // To teach - you must surprise!
 // Unique memory. Leave something unique. Shock the system. Something it hasn't seen before. Make it laugh. Make it - memorable. There is a reason we say things are <i>memorable</i>. Why am I typing this here?...
 
 $(document).ready(function(){
-    $('[data-toggle="tooltip"]').tooltip();
-    $('.question_tools').hide();
+    //$('[data-toggle="tooltip"]').tooltip();
+    //$('.question_tools').hide();
 });
-
-// the only cool thing about this
-autosize($('.input_box'));
 
 // WET DIAMONDS IN MA MOUTH
 var items = [];
@@ -352,6 +598,7 @@ var generate = function (e) {
 	}
 }
 
+/*
 $('.input_box').bind('input propertychange', function() {
 	// lazy af
 	//if($(this).val() == '') {
@@ -360,25 +607,24 @@ $('.input_box').bind('input propertychange', function() {
 		questions_container.hide();
 		$('.question_tools').hide();
 	//}
-});
+}); */
 
-//setup before functions
-var typingTimer;                //timer identifier
-var doneTypingInterval = 250;  //time in ms, 5 second for example
 
+/*
 //on keyup, start the countdown
 $('.input_box').keyup(function(){
     clearTimeout(typingTimer);
     if ($(this).val) {
         typingTimer = setTimeout(doneTyping, doneTypingInterval);
     }
-});
+}); */
 
 //user is "finished typing," do something
 function doneTyping (e) {
     generate(e);
 }
 
+/*
 $('.b_knowit').click(function (e) {
 
 	if($('.input_box').val() != '') {
@@ -402,7 +648,7 @@ $('.b_knowit').click(function (e) {
 		questions_container.hide();
 		$('.input_box').val(''); // tears
 	}
-});
+}); */
 
 var addInteractiveQuestion = function (i) {
 	// i should have original data, question & answer
@@ -491,10 +737,12 @@ var addQuestion = function (i) {
 	thisentryineedreferencetoffs.children().children('.close-thik').tooltip();
 }
 
+/*
 $('.b_addquestion').click(function (e) {
 	addQuestion(e);
-});
+}); */
 
+/*
 // this seems to me like a really good idea to include
 // anything you can do to help the user here
 // prod them to do SOMETHING with their lives
@@ -505,7 +753,7 @@ $('.b_5ws').click(function (e) {
 		q.question = i;
 		addQuestion(q);
 	})
-});
+}); */
 
 // this some bullshit from s/o that doesn't work
 // i'm too lazy to figure out why the selector
